@@ -81,7 +81,8 @@ const handleCommand = async (command) => {
                 break;
             }
             console.log(`Converting check-in ID: ${arg} to registration form...`);
-            console.log("This feature is not yet implemented.");
+            const registrationForm = await apiClient.convertCheckInToRegistrationForm(arg);
+            console.log("Convertion Response:", registrationForm);
             break;
 
         case 'getGuestCardsForCheckIn':
@@ -114,7 +115,8 @@ const handleCommand = async (command) => {
                 break;
             }
             console.log(`Sending guest cards for check-in ID: ${arg}...`);
-            console.log("This feature is not yet implemented.");
+            const sendResponse = await apiClient.sendGuestCardsForCheckIn(arg);
+            console.log("Sending Response:", sendResponse);
             break;
         
         case 'exit':

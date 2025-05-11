@@ -130,6 +130,16 @@ export class FeratelClientAPIWrapper {
 
     // Function to approve pre check-in
     async approvePreCheckIn(checkInId) {
+        var retVal = await this._convertRegistrationFormTo(checkInId, 7);
+        return retVal;
+    }
+
+    async convertCheckInToRegistrationForm(checkInId) {
+        var retVal = await this._convertRegistrationFormTo(checkInId, 0);
+        return retVal;
+    }
+
+    async _convertRegistrationFormTo(checkInId, convertToType) {
         var preCheckInformation = await this.getPreCheckIn(checkInId);
         if (!preCheckInformation || !preCheckInformation.sheet) {
             throw new Error("Pre-check-in information not found or invalid.");  
@@ -148,7 +158,9 @@ export class FeratelClientAPIWrapper {
             model: JSON.stringify(model)
         }
         const response = await this.axiosInstance.post('/SBG/de/visitorregistrationforms/convertto/' + 
-            this.orgID + '?dbOv=MW4&masterId=' + checkInId + '&convertToType=7&masterSubType=0', 
+            this.orgID + '?dbOv=MW4&masterId=' + checkInId + 
+                            '&convertToType=' + convertToType +
+                            '&masterSubType=0', 
             payload,
             {
                 headers: {
@@ -160,9 +172,6 @@ export class FeratelClientAPIWrapper {
         return JSON.parse(JSON.stringify(data));
     }
 
-    async convertCheckInToRegistrationForm(checkInId) {
-        throw new Exception("Not implemented!")
-    }
  
 
     async deleteRegistration(checkInId) {
@@ -218,11 +227,11 @@ export class FeratelClientAPIWrapper {
         var model = {
                 "type": 1,
                 "templateId": "96cdbcfa-e641-499a-9fcc-010785ba9ec8",
-                "email": "",
+                "email": guestCardsToCreate[0].Email,
                 "guestCards": guestCardsToCreate,
         }   
 
-        payload = {
+        var payload = {
             model: JSON.stringify(model)
         }
         const response = await this.axiosInstance.post('SBG/de/visitorregistrationforms/sendmobileguestcards/' + 
